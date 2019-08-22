@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import axios from '../../axios.production';
 import Dashboard from '../../components/UI/Dashboard/Dashboard';
 import { Route, Switch } from 'react-router-dom';
+import classes from '../../assets/css/bootstrap.min.css';
+import Productdetails from './Productdetails/Productdetails';
+import ProductUpdate from './ProductUpdate/ProductUpdate';
 
 
 export default class Production extends Component {
@@ -11,8 +14,6 @@ export default class Production extends Component {
     }
 
     componentDidMount() {
-        console.log(this.props.match.url);
-
         axios.get('product/read')
             .then(response => {
                 this.setState({
@@ -22,36 +23,23 @@ export default class Production extends Component {
             .catch();
     }
 
-    readproducthandler(id) {
-        console.log('created ' + id);
-    }
-
-    updateproducthandler(id) {
-        console.log('updated ' + id);
-    }
-
-    deleteproducthandler(id) {
-        console.log('deleted ' + id);
-    }
 
     render() {
         return (
-            <div className="container">
+            <div className={classes["container"]}>
                 <Switch>
-                    <Route path={this.props.match.url+ "/delete"} render={() => (
+                    <Route path={this.props.match.url + "/delete"} render={() => (
                         <h1>delete</h1>
                     )} />
-                    <Route path="/update/:id" render={() => (
-                        <h1>update</h1>
+                    <Route path={this.props.match.url + "/update/:id"} render={() => (
+                        <ProductUpdate  {...this.props} />
                     )} />
-                    <Route path="/details/:id" render={() => (
-                        <h1>details</h1>
+                    <Route path={this.props.match.url + "/details/:id"} render={() => (
+                        <Productdetails {...this.props} />
                     )} />
-                    <Route path="/" exact render={() => (
+                    <Route path="/products" render={() => (
                         <Dashboard
-                            details={this.readproducthandler}
-                            update={this.updateproducthandler}
-                            delete={this.deleteproducthandler}
+                            {...this.props}
                             records={this.state.records} />
                     )} />
                 </Switch>

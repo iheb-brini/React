@@ -4,7 +4,7 @@
   border-radius: 50%;
 }
 .Loader {
-  color: #731c6a;
+  color: #cd1719;
   font-size: 11px;
   text-indent: -99999em;
   margin: 55px auto;
@@ -24,7 +24,7 @@
 .Loader:before {
   width: 5.2em;
   height: 10.2em;
-  background: #731c6a;
+  background: #cd1719;
   border-radius: 10.2em 0 0 10.2em;
   top: -0.1em;
   left: -0.1em;
@@ -36,7 +36,7 @@
 .Loader:after {
   width: 5.2em;
   height: 10.2em;
-  background: #731c6a;
+  background: #cd1719;
   border-radius: 0 10.2em 10.2em 0;
   top: -0.1em;
   left: 5.1em;

@@ -11,11 +11,9 @@ export default (props) => {
     if (Object.keys(props.records).length) {
         const rows = Object.keys(props.records).map(key => {
             return <Row
+                {...props}
                 key={key}
                 row={props.records[key]}
-                details={props.details}
-                updated={props.update}
-                deleted={props.delete}
             />
         })
         tbody = (

@@ -14,7 +14,7 @@ export default (props) => {
     if (props.signed_in) {
         navItems = (
             <ul className={classes.NavigationItems}>
-                <NavigationItem link='/' exact>Home</NavigationItem>
+                <NavigationItem link='/products' >Products</NavigationItem>
                 <NavigationItem link='/account' exact>account</NavigationItem>
                 <NavigationItem link='/logout'>Sign-out</NavigationItem>
             </ul>

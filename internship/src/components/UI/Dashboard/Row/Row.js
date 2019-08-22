@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button } from 'react-bootstrap';
+import { NavLink } from 'react-router-dom';
 
-const row = (props) => {
+
+export default (props) => {
     let data = [];
+
+
+    useEffect(() => {
+    })
 
     data = Object.keys(props.row).map(key => {
         if ((key !== 'id') && key !== 'category_id') {
@@ -15,10 +21,18 @@ const row = (props) => {
 
     data.push((
         <td key={props.row['id']}>
-            <Button onClick={() => props.details(props.row['id'])} variant="primary">DETAILS</Button>
-            <Button onClick={() => props.updated(props.row['id'])} variant="warning">EDIT</Button>
-            <Button onClick={() => props.deleted(props.row['id'])} variant="danger">DELETE</Button>
-        </td>))
+            <NavLink to={{
+                pathname: props.match.url + '/details/' + props.row['id']
+            }}>
+                <Button variant="primary">DETAILS</Button>
+            </NavLink>
+            <NavLink to={props.match.url + '/update/' + props.row['id']}>
+                <Button variant="warning">EDIT</Button>
+            </NavLink>
+            <NavLink to={props.match.url + '/delete/'}>
+                <Button variant="danger">DELETE</Button>
+            </NavLink>
+        </td >))
     return (
         <tr>
             {data}
@@ -26,4 +40,3 @@ const row = (props) => {
     )
 }
 
-export default row

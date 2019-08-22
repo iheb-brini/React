@@ -16,7 +16,8 @@ function App() {
           <Route path="/register" component={Registration} />
           <Route path="/logout" component={Production} />
           <Route path="/account" component={Production} />
-          <Route path="/" component={Production} />
+          <Route path="/products" component={Production} />
+          <Route path="/" exact component={Production} />
         </Switch>
       </Layout>
     </div>
