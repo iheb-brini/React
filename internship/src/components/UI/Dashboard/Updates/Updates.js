@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Table } from 'react-bootstrap';
+import Input from '../../../UI/Input/Input';
+
 
 export default (props) => {
 
@@ -9,7 +11,7 @@ export default (props) => {
         settbody(<tbody>
             <tr>
                 <td>Name</td>
-                <td><input type="text" value={props.details.name}/></td>
+                <td>{props.details.name}</td>
             </tr>
             <tr>
                 <td>Price</td>
@@ -31,7 +33,7 @@ export default (props) => {
     }, []);
 
     const back = () => {
-        props.history.push(props.match.url);
+        //props.history.push(props.match.url);
     }
 
     return (

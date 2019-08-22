@@ -1,0 +1,55 @@
+{
+  "name": {
+    "elementType": "input",
+    "elementconfig": {
+      "type": "text",
+      "placeholder": "Your name"
+    },
+    "value": "",
+    "validation": {
+      "required": true
+    },
+    "valid": false,
+    "touched": false
+  },
+  "price": {
+    "elementType": "input",
+    "elementconfig": {
+      "type": "number",
+      "placeholder": "price"
+    },
+    "value": "",
+    "validation": {
+      "required": true
+    },
+    "valid": false,
+    "touched": false
+  },
+  "description": {
+    "elementType": "input",
+    "elementconfig": {
+      "type": "text",
+      "placeholder": "description"
+    },
+    "value": "",
+    "validation": {
+      "required": true
+    },
+    "valid": false,
+    "touched": false
+  },
+  "category_name": {
+    "elementType": "select",
+    "elementconfig": {
+      "options": [
+        { "value": "Fashion", "displayValue": "Fashion" },
+        { "value": "Motors", "displayValue": "Motors" },
+        { "value": "Books", "displayValue": "Books" }
+      ]
+    },
+    "value": "Fashion",
+    "validation": {},
+    "valid": true,
+    "touched": false
+  }
+}
