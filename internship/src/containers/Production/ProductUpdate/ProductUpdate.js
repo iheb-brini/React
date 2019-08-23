@@ -1,14 +1,19 @@
+/*  eslint-disable  */
+
 import React, { Component } from 'react'
 import Input from '../../../components/UI/Input/Input';
 import axios from '../../../axios.production';
+import { connect } from 'react-redux';
+import * as actionTypes from '../../../store/actions';
 import Spinner from '../../../components/UI/Spinner/Spinner';
+import Button from '../../../components/UI/Button/Button';
 import myData from './form.json';
 import Aux from '../../../hoc/Auxi/Auxi';
 import bootstrap from '../../../assets/css/bootstrap.min.css';
 import classes from './ProductUpdate.css';
 
 
-export default class ProductUpdate extends Component {
+class ProductUpdate extends Component {
     state = {
         product_details: {
 
@@ -16,22 +21,17 @@ export default class ProductUpdate extends Component {
         form_details: {
             ...myData
         },
-        canSend: false,
-        formIsValid: false
+        loading: true,
+        formIsValid: true,
+
     }
 
     async componentDidMount() {
         await this.updateProduct();
         // console.log(this.state.form_details['name']);
 
-        const newObject = { ...this.state.form_details };
-        for (let key of Object.keys(newObject)) {
-            newObject[key]['value'] = this.state.product_details[key];
-        }
-
         this.setState({
-            form_details: { ...newObject },
-            canSend: true
+            loading: false
         })
 
 
@@ -55,27 +55,59 @@ export default class ProductUpdate extends Component {
 
     formHandler(event) {
         event.preventDefault();
+        console.log('clicked');
+        this.setState({
+            loading: true
+        })
+        //console.log(this.state.product_details);
+
+        // console.log(this.state.product_details);
+        let formData = {
+            ...this.state.product_details
+        }
+
+
+        delete formData.category_name;
+
+
+        axios.post('product/update', formData)
+            .then((response) => {
+                console.log(response.data);
+                this.props.onProductUpdate(formData);
+                this.props.history.push(this.props.match.url);
+                //this.props.match.url
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                this.setState({
+                    loading: false
+                })
+            })
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
-        let newform_details = {
-            ...this.state.form_details
-        }
-        let newFormElementValues = {
-            ...newform_details[inputIdentifier]
+        console.log(this.state.product_details);
+
+        const newproduct_details = {
+            ...this.state.product_details
         }
 
-        newFormElementValues.value = event.target.value;
 
-        newform_details[inputIdentifier] = newFormElementValues;
+        newproduct_details[inputIdentifier] = event.target.value;
 
         let formIsValid = true;
 
 
         this.setState({
-            form_details: { ...newform_details },
+            product_details: { ...newproduct_details },
             formIsValid: formIsValid
         })
+
+        console.log(this.state.newproduct_details);
+
+
     }
 
     jsUcfirst(ch) {
@@ -84,11 +116,12 @@ export default class ProductUpdate extends Component {
 
 
     render() {
+
         let content = (
             <Spinner />
         );
 
-        if (this.state.canSend) {
+        if (!this.state.loading) {
             const formElements = [];
             for (let key in this.state.form_details) {
                 formElements.push({
@@ -98,30 +131,33 @@ export default class ProductUpdate extends Component {
             }
 
             let tableClasses = [classes.Table, bootstrap['table'],
-            bootstrap['table-hover'] , bootstrap['table-bordered']];
+            bootstrap['table-hover'], bootstrap['table-bordered']];
             content = (
-                <form onSubmit={this.formHandler}>
+                <form onSubmit={this.formHandler.bind(this)}>
                     <table className={tableClasses.join(' ')}>
-                        {formElements.map(formElement => (
-                            <tr key={formElement.id}>
-                                <td>{formElement.id === 'category_name' ?
-                                    'Category name' : this.jsUcfirst(formElement.id)}</td>
-                                <td>
-                                    <Input
-                                        elementType={formElement.config.elementType}
-                                        elementConfig={formElement.config.elementconfig}
-                                        value={formElement.config.value}
-                                        invalid={!formElement.config.valid}
-                                        shouldValidate={formElement.config.validation}
-                                        touched={formElement.config.touched}
-                                        changed={(event) => {
-                                            this.inputChangedHandler(event, formElement.id)
-                                        }}
-                                    />
-                                </td>
-                            </tr>
-                        ))}
+                        <tbody>
+                            {formElements.map(formElement => (
+                                <tr key={formElement.id}>
+                                    <td>{formElement.id === 'category_name' ?
+                                        'Category name' : this.jsUcfirst(formElement.id)}</td>
+                                    <td>
+                                        <Input
+                                            elementType={formElement.config.elementType}
+                                            elementConfig={formElement.config.elementconfig}
+                                            value={this.state.product_details[formElement.id]}
+                                            invalid={!formElement.config.valid}
+                                            shouldValidate={formElement.config.validation}
+                                            touched={formElement.config.touched}
+                                            changed={(event) => {
+                                                this.inputChangedHandler(event, formElement.id)
+                                            }}
+                                        />
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
                     </table>
+                    <Button className={classes['Button']} btnType="Success" disabled={!this.state.formIsValid}>SUBMIT</Button>
                 </form>
             )
 
@@ -134,3 +170,16 @@ export default class ProductUpdate extends Component {
         )
     }
 }
+
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onProductUpdate: (updatedProduct) => dispatch({
+            type: actionTypes.UPDATE_PRODUCT,
+            updatedProduct: updatedProduct
+        }),
+    }
+}
+
+export default connect(null, mapDispatchToProps)(ProductUpdate);

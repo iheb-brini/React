@@ -11,6 +11,7 @@ export default (props) => {
     if (Object.keys(props.records).length) {
         const rows = Object.keys(props.records).map(key => {
             return <Row
+                clicked={props.clicked}
                 {...props}
                 key={key}
                 row={props.records[key]}
@@ -24,6 +25,7 @@ export default (props) => {
     }
 
     useEffect(() => {
+
         if (Object.keys(props.records).length) {
         }
     });

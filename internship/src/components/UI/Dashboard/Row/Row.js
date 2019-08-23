@@ -29,9 +29,9 @@ export default (props) => {
             <NavLink to={props.match.url + '/update/' + props.row['id']}>
                 <Button variant="warning">EDIT</Button>
             </NavLink>
-            <NavLink to={props.match.url + '/delete/'}>
-                <Button variant="danger">DELETE</Button>
-            </NavLink>
+                <Button variant="danger" onClick={() => props.clicked(props.row['id'])}>DELETE</Button>
+            {/* <NavLink to={props.match.url + '/delete/'}>
+            </NavLink> */}
         </td >))
     return (
         <tr>

@@ -165,6 +165,7 @@ export default class Registration extends Component {
             orderForm: updatedOrderForm,
             formIsValid: formIsValid
         });
+        
     };
 
     render() {
