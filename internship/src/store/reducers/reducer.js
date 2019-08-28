@@ -1,12 +1,14 @@
-import * as actionTypes from './actions';
+import * as actionTypes from '../actions/actionType';
 
 
 const initialState = {
     records: [],
+    loading: false,
     deleteProduct: {
         showModal: false,
         productID: null
-    }
+    },
+    categories: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -44,6 +46,17 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 records: newRecords
             }
+        case actionTypes.CREATE_PRODUCT:
+            newRecords = state.records;
+            postion = 0;
+
+            newRecords.push(action.createdProduct);
+            // eslint-disable-next-line
+
+            return {
+                ...state,
+                records: newRecords
+            }
         case actionTypes.DELETE_PRODUCT:
             newRecords = state.records;
             postion = 0;
@@ -56,6 +69,24 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 records: newRecords
+            }
+        case actionTypes.READ_CATEGORY:
+            newRecords = state.records;
+            postion = 0;
+            // eslint-disable-next-line
+            for (let index in newRecords) {
+                if (newRecords[index].id === action.id)
+                    postion = index
+            }
+            newRecords.splice(postion, 1)
+            return {
+                ...state,
+                records: newRecords
+            }
+        case actionTypes.READ_CATEGORY:
+            return {
+                ...state,
+                categories: action.records
             }
         default:
             return state;

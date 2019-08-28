@@ -8,26 +8,25 @@ export default (props) => {
     let tbody = (
         <tbody></tbody>
     )
-    if (Object.keys(props.records).length) {
-        const rows = Object.keys(props.records).map(key => {
-            return <Row
-                clicked={props.clicked}
-                {...props}
-                key={key}
-                row={props.records[key]}
-            />
-        })
-        tbody = (
-            <tbody>
-                {rows}
-            </tbody>
-        )
-    }
+    if (props.records)
+        if (Object.keys(props.records).length) {
+            const rows = Object.keys(props.records).map(key => {
+                return <Row
+                    clicked={props.clicked}
+                    {...props}
+                    key={key}
+                    row={props.records[key]}
+                />
+            })
+            tbody = (
+                <tbody>
+                    {rows}
+                </tbody>
+            )
+        }
 
     useEffect(() => {
 
-        if (Object.keys(props.records).length) {
-        }
     });
 
 

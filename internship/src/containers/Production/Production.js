@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actionTypes from '../../store/actions';
 import axios from '../../axios.production';
+import { NavLink } from 'react-router-dom';
+import * as actions from '../../store/actions/index';
 import Dashboard from '../../components/UI/Dashboard/Dashboard';
 import Button from '../../components/UI/Button/Button';
 import Modal from '../../components/UI/Modal/Modal';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import { Route, Switch } from 'react-router-dom';
 import classes from '../../assets/css/bootstrap.min.css';
 import Productdetails from './Productdetails/Productdetails';
 import ProductUpdate from './ProductUpdate/ProductUpdate';
 import ProductDelete from './ProductDelete/ProductDelete';
 import Aux from '../../hoc/Auxi/Auxi';
+import withErrorHandler from '../../hoc/WithErrorHandler/withErrorHandler';
+import ProductCreate from './ProductCreate/ProductCreate';
+import { stringLiteral } from '@babel/types';
 
 
 class Production extends Component {
 
     state = {
-        canReload: true
+        canReload: true,
     }
 
     constructor(props) {
@@ -26,14 +31,20 @@ class Production extends Component {
 
     componentDidMount() {
         console.log('Production mount');
-        this.readProducts();
-        this._isMounted = true;
+        //this.props.onProductRead();
 
+        this.readProducts();
+        console.log(this.props.loading);
+
+    }
+
+    componentDidUpdate() {
+        console.log('did update');
     }
 
     deleteHandler(id) {
         //console.log('clicked ', id);
-        this.props.deletionModel(true, id);
+        this.props.onDeletionModel(true, id);
     }
     confirmDeletetion() {
 
@@ -43,17 +54,17 @@ class Production extends Component {
         axios.post('product/delete', formData)
             .then(response => {
                 console.log(response.data);
-                this.props.deleteProduct(this.props.modal.productID);
+                this.props.onProductDeletion(this.props.modal.productID);
                 //this.props.deletionModel(false, null);
             })
             .catch(err => {
             })
             .finally(() => {
-                this.props.deletionModel(false, null)
+                this.props.onDeletionModel(false, null)
             })
     }
     cancelDeletetion() {
-        this.props.deletionModel(false, null)
+        this.props.onDeletionModel(false, null)
     }
 
 
@@ -61,16 +72,21 @@ class Production extends Component {
 
         axios.get('product/read')
             .then(response => {
-                this.props.onProductCreate(response.data['records'])
-                console.log(response.data['records']['1']);
-
+                this.props.onProductRead(response.data['records'])
             })
-            .catch();
+            .catch(err => console.log(err));
     }
     render() {
-        return (
-            <div className={classes["container"]}>
+        let crud = <Spinner />;
+        console.log('kk' + this.props.records);
+        console.log(this.props.records);
+
+        if (this.props.records.length > 0)
+            crud = (
                 <Switch>
+                    <Route path={this.props.match.url + "/create"} render={() => (
+                        <ProductCreate {...this.props} />
+                    )} />
                     <Route path={this.props.match.url + "/delete"} render={() => (
                         <ProductDelete {...this.props} />
                     )} />
@@ -87,6 +103,7 @@ class Production extends Component {
                                 <Button btnType='Success' clicked={this.confirmDeletetion.bind(this)}>CONFIRM</Button>
                                 <Button btnType='Danger' clicked={this.cancelDeletetion.bind(this)}>CANCEL</Button>
                             </Modal>
+                            <NavLink to='/products/create' >Create Product</NavLink>
 
                             <Dashboard
                                 clicked={this.deleteHandler.bind(this)}
@@ -96,7 +113,13 @@ class Production extends Component {
 
                     )} />
                 </Switch>
+            );
 
+
+
+        return (
+            <div className={classes["container"]}>
+                {crud}
             </div>
         )
     }
@@ -106,26 +129,19 @@ class Production extends Component {
 const mapStateToProps = (state) => {
     return {
         records: state.records,
-        modal: state.deleteProduct
+        modal: state.deleteProduct,
+        loading: state.loading
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onProductCreate: (records) => dispatch({
-            type: actionTypes.READ_PRODUCTS,
-            records: records
-        }),
-        deletionModel: (show, id) => dispatch({
-            type: actionTypes.SHOW_DELETE_MODAL,
-            show: show,
-            id: id
-        }),
-        deleteProduct: (id) => dispatch({
-            type: actionTypes.DELETE_PRODUCT,
-            id: id
-        })
+        onProductRead: (records) => dispatch(actions.readProducts(records)),
+        onProductsInit: () => dispatch(actions.requestProducts()),
+        onProductDeletion: (id) => dispatch(actions.deleteProduct(id)),
+        onDeletionModel: (show, id) => dispatch(actions.showDeleteModel(show, id)),
+        onCategoryRead: () => dispatch(actions.requestProducts()),
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Production);
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Production, axios));

@@ -10,13 +10,16 @@ import Button from '../../../components/UI/Button/Button';
 import myData from './form.json';
 import Aux from '../../../hoc/Auxi/Auxi';
 import bootstrap from '../../../assets/css/bootstrap.min.css';
-import classes from './ProductUpdate.css';
+import classes from './ProductCreate.css';
 
 
-class ProductUpdate extends Component {
+class ProductCreate extends Component {
     state = {
         product_details: {
-
+            "name": "",
+            "price": 0,
+            "description": "",
+            "category_name": ""
         },
         form_details: {
             ...myData
@@ -27,7 +30,7 @@ class ProductUpdate extends Component {
     }
 
     async componentDidMount() {
-        await this.updateProduct();
+        //await this.updateProduct();
         // console.log(this.state.form_details['name']);
 
         this.setState({
@@ -63,17 +66,20 @@ class ProductUpdate extends Component {
 
         // console.log(this.state.product_details);
         let formData = {
-            ...this.state.product_details
+            ...this.state.product_details,
+            "category_id": 1
         }
 
 
-        delete formData.category_name;
-
-
-        axios.post('product/update', formData)
-            .then((response) => {
-                console.log(response.data);
-                this.props.onProductUpdate(formData);
+        axios.post('product/create', formData)
+            .then(response => {
+                //console.log('creating product');
+                //console.log(response);
+                let newProducts = {
+                    ...formData,
+                    id: response.data.id
+                }
+                this.props.onProductCreate(newProducts);
                 this.props.history.push(this.props.match.url);
                 //this.props.match.url
             })
@@ -88,7 +94,7 @@ class ProductUpdate extends Component {
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
-        console.log(this.state.product_details);
+        //console.log(this.state.product_details);
 
         const newproduct_details = {
             ...this.state.product_details
@@ -104,9 +110,6 @@ class ProductUpdate extends Component {
             product_details: { ...newproduct_details },
             formIsValid: formIsValid
         })
-
-        console.log(this.state.newproduct_details);
-
 
     }
 
@@ -175,8 +178,8 @@ class ProductUpdate extends Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onProductUpdate: (updatedProduct) => dispatch(action.updateProduct(updatedProduct)),
+        onProductCreate: (createdProduct) => dispatch(action.createProduct(createdProduct)),
     }
 }
 
-export default connect(null, mapDispatchToProps)(ProductUpdate);
+export default connect(null, mapDispatchToProps)(ProductCreate);
