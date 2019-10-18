@@ -23,11 +23,10 @@ export default class Productdetails extends Component {
 
     updateProductDetails() {
         let id = +this.props.location.pathname.substr(this.props.location.pathname.lastIndexOf('/') + 1);
-        axios.get('/product/read_one?id=' + id)
+        axios.get('/product/'+id)
             .then(response => {
-
                 this.setState({
-                    product_details: response.data,
+                    product_details: response.data[0],
                     canSend: true
                 })
             })

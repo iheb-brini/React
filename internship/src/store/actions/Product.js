@@ -18,7 +18,7 @@ export const readProducts = (records) => {
 
 export const requestProducts = () => {
     return dispatch => {
-        axios.get('product/read')
+        axios.get('product/')
             .then(response => {
                 console.log(response.data);
                 dispatch(readProducts(response.data))

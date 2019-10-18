@@ -28,29 +28,27 @@ class ProductUpdate extends Component {
 
     async componentDidMount() {
         await this.updateProduct();
-        // console.log(this.state.form_details['name']);
-
+        
         this.setState({
             loading: false
         })
 
 
-        console.log(this.state.form_details);
     }
 
     updateProduct() {
         let id = +this.props.location.pathname.substr(this.props.location.pathname.lastIndexOf('/') + 1);
-        return axios.get('/product/read_one?id=' + id)
+        return axios.get('/product/' + id)
             .then(response => {
-
+                console.log(response.data);
+                
                 this.setState({
-                    product_details: response.data,
+                    product_details: response.data[0],
 
                 })
-                //console.log(this.state.product_details);
 
             })
-            .catch()
+            .catch(err => console.log(err))
     }
 
     formHandler(event) {
@@ -59,36 +57,43 @@ class ProductUpdate extends Component {
         this.setState({
             loading: true
         })
-        //console.log(this.state.product_details);
 
-        // console.log(this.state.product_details);
         let formData = {
             ...this.state.product_details
         }
 
+        delete formData.id;
+        //delete formData.category_name;
 
-        delete formData.category_name;
+        let id = +this.props.location.pathname.substr(this.props.location.pathname.lastIndexOf('/') + 1);
+        //console.log(formData);
+        
+        //console.log(id);
+    
 
-
-        axios.post('product/update', formData)
+        axios.post('/product/'+id, formData)
             .then((response) => {
-                console.log(response.data);
+                console.log(id);
+                
                 this.props.onProductUpdate(formData);
                 this.props.history.push(this.props.match.url);
                 //this.props.match.url
-            })
+            })  
             .catch((error) => {
                 console.log(error);
+                console.log(formData);
+                
             })
             .finally(() => {
                 this.setState({
                     loading: false
                 })
             })
+
+            
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
-        console.log(this.state.product_details);
 
         const newproduct_details = {
             ...this.state.product_details
@@ -104,8 +109,6 @@ class ProductUpdate extends Component {
             product_details: { ...newproduct_details },
             formIsValid: formIsValid
         })
-
-        console.log(this.state.newproduct_details);
 
 
     }

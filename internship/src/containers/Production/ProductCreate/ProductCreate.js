@@ -71,7 +71,7 @@ class ProductCreate extends Component {
         }
 
 
-        axios.post('product/create', formData)
+        axios.post('/product/', formData)
             .then(response => {
                 //console.log('creating product');
                 //console.log(response);

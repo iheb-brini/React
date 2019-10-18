@@ -83,11 +83,11 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 records: newRecords
             }
-        case actionTypes.READ_CATEGORY:
+/*         case actionTypes.READ_CATEGORY:
             return {
                 ...state,
                 categories: action.records
-            }
+            } */
         default:
             return state;
     }

@@ -9,9 +9,9 @@ export default (props) => {
 
     useEffect(() => {
     })
-
+    
     data = Object.keys(props.row).map(key => {
-        if ((key !== 'id') && key !== 'category_id') {
+        if ((key !== 'id') && key !== 'category_id' && key!=='created' && props.row[key]) {
             return (
                 <td key={key}>{props.row[key]}</td>
             )
@@ -33,9 +33,20 @@ export default (props) => {
             {/* <NavLink to={props.match.url + '/delete/'}>
             </NavLink> */}
         </td >))
+
+            
+    // REPLACE LATER ON
+    let hard_coded_data = [];
+
+    hard_coded_data[0] = data[2];
+    hard_coded_data[1] = data[4];
+    hard_coded_data[2] = data[3];        
+    hard_coded_data[3] = data[0];        
+    hard_coded_data[4] = data[data.length-1];        
+
     return (
         <tr>
-            {data}
+            {hard_coded_data}
         </tr>
     )
 }
